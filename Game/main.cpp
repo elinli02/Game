@@ -2,14 +2,17 @@
 #include <SFML/Audio.hpp>
 #include <Windows.h>
 #include "CustomButton.h"
+#include "WorkWindow.h"
 
 using namespace sf;
 void createWindow(Texture texture1);
-int widhtWindow = 800;
+int widthWindow = 800;
 int heightWindow = 500;
 int main()
 {
-    HWND hWnd = GetConsoleWindow();
+    WorkWindow* windowStart = new WorkWindow(widthWindow, heightWindow, "Start", "source/img/picturebig.jpg");
+    RenderWindow* window = windowStart->getWindow();
+    /*HWND hWnd = GetConsoleWindow();
     ShowWindow(hWnd, SW_HIDE);
     RenderWindow window(VideoMode(widhtWindow, heightWindow), "Game window");
     Texture texture;
@@ -21,7 +24,7 @@ int main()
     Texture textureSetting;
     if (!textureSetting.loadFromFile("source/img/window2.jpg"))
         return EXIT_FAILURE;
-    Sprite sprite(texture);
+    Sprite sprite(texture);*/
 
     /*Font font1;
     if (!font.loadFromFile("source/font/air-millhouse-italic3.ttf"))
@@ -39,23 +42,23 @@ int main()
     if (!music1.openFromFile("source/audio/motor.ogg"))
         return EXIT_FAILURE;
     music1.play();*/
-
-    int countArrayCustomButton = 3;
-    CustomButton** arrayCustomButton = new CustomButton*[countArrayCustomButton];
+    vector <CustomButton*> buttons;
+    /*int countArrayCustomButton = 3;
+    CustomButton** arrayCustomButton = new CustomButton*[countArrayCustomButton];*/
     //IntRect startPosition(0, 0, 187, 91);
     IntRect startPosition(0, 0, 143, 143);
     IntRect startPosition1(0, 0, 92, 92);
-    //CustomButton startButton(window, "source/img/start4.png", "source/img/start5.png", startPosition, -520, -150);
-    CustomButton startButton(window, "source/img/start1.png", "source/img/start2.png", startPosition, -530, -150);
-    CustomButton settingButton(window, "source/img/setting1.png", "source/img/setting2.png", startPosition1, -(widhtWindow-92 - 92), -(heightWindow-92));
-    CustomButton exitButton(window, "source/img/exit1.png", "source/img/exit2.png", startPosition1, -(widhtWindow - 92), -(heightWindow - 92));
-    arrayCustomButton[0] = &startButton;
+ 
+    CustomButton startButton(*window, "source/img/start1.png", "source/img/start2.png", startPosition, -330, -90);
+    CustomButton settingButton(*window, "source/img/setting1.png", "source/img/setting2.png", startPosition1, -(widthWindow-92 - 92), -(heightWindow-92));
+    CustomButton exitButton(*window, "source/img/exit1.png", "source/img/exit2.png", startPosition1, -(widthWindow - 92), -(heightWindow - 92));
+    buttons.push_back(&startButton);
+    buttons.push_back(&settingButton);
+    buttons.push_back(&exitButton);
+    /*arrayCustomButton[0] = &startButton;
     arrayCustomButton[1] = &settingButton;
-    arrayCustomButton[2] = &exitButton;
-    //Texture buttonStart;
-    //Texture buttonStartHover;
-
-    //Texture buttonSettings;
+    arrayCustomButton[2] = &exitButton;*/
+    windowStart->setButtons(&buttons);
 
     /*if (!buttonStart.loadFromFile("source/img/start4.png"))
         return EXIT_FAILURE;
@@ -71,75 +74,14 @@ int main()
 
     /*startSprite.setTextureRect(startPosition);
     startSprite.setOrigin(-520, -150);*/
-
-
-    while (window.isOpen())
-    {
-        Event event;
-        while (window.pollEvent(event))
-        {
-            Vector2i mousePos = Mouse::getPosition(window);
-            Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-            if (event.type == Event::Closed)
-            {
-                window.close();
-            }
-            if (event.type == Event::MouseMoved)
-            {
-                for (int i = 0; i < countArrayCustomButton; i++)
-                {
-                    if (arrayCustomButton[i] != NULL)
-                    {
-                        if ((*(arrayCustomButton[i])).getGlobalBounds().contains(mousePosF)) // arrayCustomButton[i]->getGlobalBounds()
-                        {
-                            arrayCustomButton[i]->changeTextureButton(true);
-                        }
-                        else
-                        {
-                            arrayCustomButton[i]->changeTextureButton(false);
-                        }
-                    }
-                    
-                }
-                
-            }
-            if (Mouse::isButtonPressed(Mouse::Left))
-            {
-                if (startButton.getGlobalBounds().contains(mousePosF))
-                {
-                    window.close();
-                    createWindow(textureGame);
-                }
-                if (settingButton.getGlobalBounds().contains(mousePosF))
-                {
-                    window.close();
-                    createWindow(textureSetting);
-                }
-                if (exitButton.getGlobalBounds().contains(mousePosF))
-                {
-                    window.close();
-                }
-            }
-            
-        }
-        
-        window.clear();
-        window.draw(sprite); //отрисовка 
-        //window.draw(text);
-        //window.draw(text1);
-        startButton.draw();
-        settingButton.draw();
-        exitButton.draw();
-        //window.draw(startSprite);
-        window.display(); // вывод на экран контента
-    }
+    windowStart->start();
     
 }
 void createWindow(Texture texture1)
 {
     HWND hWnd1 = GetConsoleWindow();
     ShowWindow(hWnd1, SW_HIDE);
-    RenderWindow window1(VideoMode(widhtWindow, heightWindow), "Start window");
+    RenderWindow window1(VideoMode(widthWindow, heightWindow), "Start window");
     
     Sprite sprite1(texture1);
     while (window1.isOpen())

@@ -3,7 +3,6 @@
 CustomButton::CustomButton(RenderWindow& window, string pathTexture, string pathHoverTexture, IntRect startPosition, float x, float y)
 {
     this->window = &window;
-    window.setTitle("new");
     this->texture = new Texture();
     if (!texture->loadFromFile(pathTexture))
         throw invalid_argument("file texture");
@@ -34,6 +33,5 @@ FloatRect CustomButton::getGlobalBounds()
 
 void CustomButton::draw()
 {
-    window->setTitle("new");
     window->draw(*sprite);
 }
