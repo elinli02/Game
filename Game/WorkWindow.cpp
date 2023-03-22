@@ -1,5 +1,21 @@
 #include "WorkWindow.h"
 
+Music* WorkWindow::mainMusic = new Music();
+
+void WorkWindow::startMainMusic(string path)
+{
+  
+    if (!mainMusic->openFromFile(path))
+        throw EXIT_FAILURE;
+    //mainMusic->play();
+}
+
+void WorkWindow::startApplication()
+{
+    startMainMusic("source/audio/music.ogg");
+    createMain();
+    
+}
 
 
 WorkWindow::WorkWindow(int width, int height, string name, string pathBackground)
@@ -19,12 +35,17 @@ WorkWindow::WorkWindow(int width, int height, string name, string pathBackground
 
 void WorkWindow::playMusic(string path)
 {
-    Music music;
-    if (!music.openFromFile(path))
+
+    /*if (!soundBuffer.loadFromFile(path))
         throw EXIT_FAILURE;
-    music.play();
-    //"source/audio/music.ogg"
-    //"source/audio/motor.ogg"
+    sound.setBuffer(soundBuffer);
+    sound.play();*/
+    Music* newMusic = new Music();
+    audios->push_back(newMusic);
+    if (!newMusic->openFromFile(path))
+        throw EXIT_FAILURE;
+   // newMusic->play();
+
 }
 
 RenderWindow* WorkWindow::getWindow()
@@ -53,7 +74,54 @@ void WorkWindow::start()
     {
         startMain();
     }
+    else if (name == "Settings")
+    {
+        startSettings();
+    }
     
+}
+void WorkWindow::createMain()
+{
+    WorkWindow* windowStart = new WorkWindow(widthWindow, heightWindow, "Start", "source/img/picturebig.jpg");
+    RenderWindow* window = windowStart->getWindow();
+   
+    //windowStart->playMusic("source/audio/motor.ogg");
+    
+
+    vector <CustomButton*> buttons;
+    /*int countArrayCustomButton = 3;
+    CustomButton** arrayCustomButton = new CustomButton*[countArrayCustomButton];*/
+    //IntRect startPosition(0, 0, 187, 91);
+    IntRect startPosition(0, 0, 143, 143);
+    IntRect startPosition1(0, 0, 92, 92);
+
+    CustomButton startButton(*window, "source/img/start1.png", "source/img/start2.png", startPosition, -330, -90);
+    CustomButton settingButton(*window, "source/img/setting1.png", "source/img/setting2.png", startPosition1, -(widthWindow - 92 - 92), -(heightWindow - 92));
+    CustomButton exitButton(*window, "source/img/exit1.png", "source/img/exit2.png", startPosition1, -(widthWindow - 92), -(heightWindow - 92));
+    buttons.push_back(&startButton);
+    buttons.push_back(&settingButton);
+    buttons.push_back(&exitButton);
+    /*arrayCustomButton[0] = &startButton;
+    arrayCustomButton[1] = &settingButton;
+    arrayCustomButton[2] = &exitButton;*/
+    windowStart->setButtons(&buttons);
+
+    /*if (!buttonStart.loadFromFile("source/img/start4.png"))
+        return EXIT_FAILURE;
+    if(!buttonStartHover.loadFromFile("source/img/start5.png"))
+        return EXIT_FAILURE;*/
+
+        /*if (!buttonSettings.loadFromFile("source/img/start1.png"))
+            return EXIT_FAILURE;*/
+
+            //Sprite startSprite(buttonStart);
+
+            //Sprite settingsSprite(buttonSettings);
+
+            /*startSprite.setTextureRect(startPosition);
+            startSprite.setOrigin(-520, -150);*/
+    windowStart->start();
+
 }
 void WorkWindow::startMain()
 {
@@ -98,6 +166,10 @@ void WorkWindow::startMain()
                 if (buttons->at(1)->getGlobalBounds().contains(mousePosF))
                 {
                     window->close();
+                    for (int i = 0; i < audios->size(); i++)
+                    {
+                        audios->at(i)->stop();
+                    }
                     createSettings();
                     
                 }
@@ -116,21 +188,62 @@ void WorkWindow::startMain()
         {
             buttons->at(i)->draw();
         }
+    
         window->display(); // вывод на экран контента
+
     }
 }
 
 void WorkWindow::createSettings()
 {
-    WorkWindow *settingsWindow = new WorkWindow(width, height, "Settings", "source/img/settings.jpg"); 
+    WorkWindow *settingsWindow = new WorkWindow(widthWindow, heightWindow, "Settings", "source/img/settings.jpg"); 
     RenderWindow* settings = settingsWindow->getWindow();
     IntRect startPosition1(0, 0, 92, 92);
     vector<CustomButton*> buttons; //*?
-    CustomButton exitButton(*window, "source/img/exit1.png", "source/img/exit2.png", startPosition1, -(width - 92), -(height - 92));
+    CustomButton exitButton(*window, "source/img/exitSet.png", "source/img/exitSet.png", startPosition1, -(width - 92), -(height - 92));
     buttons.push_back(&exitButton);
     settingsWindow->setButtons(&buttons);
-  // дописать все кнопки, которые находятся на этом окне settings
-    //элементы sfml
+    settingsWindow->progressbar = new ProgressBar(" ", 300, 50, 10, 70, "Music Volume");
+    settingsWindow->checkbox = new CheckBox(300, 200, "Distance");
+    settingsWindow->start();
+    
+}
+
+void WorkWindow::startSettings()
+{
+    while (window->isOpen())
+    {
+        Event event;
+        while (window->pollEvent(event))
+        {
+            Vector2i mousePos = Mouse::getPosition(*window);
+            Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+            if (event.type == Event::Closed)
+            {
+                window->close();
+                createMain();
+            }
+
+        }
+
+        window->clear();
+        window->draw(*background); //отрисовка 
+
+        for (int i = 0; i < buttons->size(); i++)
+        {
+            buttons->at(i)->draw();
+        }
+        if (progressbar != nullptr)
+        {
+            window->draw(*progressbar);
+        }
+        if (checkbox != nullptr)
+        {
+            window->draw(*checkbox);
+        }
+        window->display(); // вывод на экран контента
+
+    }
 }
 
 WorkWindow::~WorkWindow()

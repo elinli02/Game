@@ -5,28 +5,42 @@
 #include"CustomButton.h"
 #include"CustomException.h"
 #include <Windows.h>
+#include "ProgressBar.h"
+#include "CheckBox.h"
 using namespace sf;
 using namespace std;
 class WorkWindow
 {
-    // todo прописывать текстуру для окна, функционал каждого окна за исключением игрового
-    // 3 функции для каждого окна
     RenderWindow* window;
     Sprite* background;
+    ProgressBar* progressbar;
+    CheckBox* checkbox;
+    //vector<Drawable*> elements;
     vector<CustomButton*> *buttons;
-    vector<Music*> *audios;
+    vector<Music*> *audios = new vector<Music*>;
     string name;
-    int height;
     int width;
+    int height;
+    static void createMain();
     void startMain();
     void createSettings();
-public:
+    void startSettings();
     WorkWindow(int width, int height, string name, string pathBackground);
     void playMusic(string path);
     RenderWindow* getWindow();
-    void setButtons(vector<CustomButton*> *buttons);
+    void setButtons(vector<CustomButton*>* buttons);
     void addButton(CustomButton* button);
     void start();
     ~WorkWindow();
+    static const int widthWindow = 800;
+    static const int heightWindow = 500;
+    static Music* mainMusic;
+    static void startMainMusic(string path);
+    
+    //SoundBuffer soundBuffer;
+    //Sound sound;
+public:
+    static void startApplication();
+    
 };
 
