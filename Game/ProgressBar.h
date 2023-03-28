@@ -22,7 +22,7 @@ class ProgressBar: public Drawable
     int x = 100;
 public:
     ProgressBar(string path, int width, int height, int widthSlider, int heightSlider, string label);
-    
+    bool containBounds(int positionMouseX, int positionMouseY);
     void move(int x);
     void changeActive();
     //virtual void draw(RenderTarget& target, RenderStates states); //to do разобрать override

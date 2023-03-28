@@ -36,7 +36,7 @@ class WorkWindow
     static const int heightWindow = 500;
     static Music* mainMusic;
     static void startMainMusic(string path);
-    
+    void saveSettings();
     //SoundBuffer soundBuffer;
     //Sound sound;
 public:

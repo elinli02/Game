@@ -24,10 +24,21 @@ ProgressBar::ProgressBar(string path, int width, int height, int widthSlider, in
     text->setFillColor(Color(0, 0, 0));
 }
 
+bool ProgressBar::containBounds(int positionMouseX, int positionMouseY)
+{
+    return (positionMouseX > positionX && positionMouseX<positionX + width && positionMouseY>positionY && positionMouseY < positionY + height);
+}
+
 void ProgressBar::move(int x)
 {
-    //slider->left = 500 + width - width * (x / 100);
+   // slider->left = 500 + width - width * (x / 100);
     //setPosition ó slider 500 + width, 200 - heightSlider / 5,
+    if (x >= positionX && x <= positionX + width)
+    {
+        slider->setPosition(Vector2f(x, positionY - heightSlider / 5));
+
+    }
+    
 }
 
 void ProgressBar::changeActive()

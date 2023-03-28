@@ -1,6 +1,6 @@
 #include "CheckBox.h"
 
-CheckBox::CheckBox(int positionX, int positionY, string label, bool checked)
+CheckBox::CheckBox(int positionX, int positionY, string label, string textChecked, bool checked)
 {
     this->checked = checked;
     this->positionX = positionX;
@@ -16,6 +16,10 @@ CheckBox::CheckBox(int positionX, int positionY, string label, bool checked)
     text = new Text(label, *font);
     text->setPosition(Vector2f(positionTextX, positionTextY));
     text->setFillColor(Color(0, 0, 0));
+    symbol = new Text(textChecked, *font);
+    symbol->setPosition(Vector2f(positionX, positionY));
+    symbol->setFillColor(Color(0, 0, 0));
+    symbol->setCharacterSize(15);
 }
 
 bool CheckBox::isChecked()
@@ -27,7 +31,10 @@ void CheckBox::draw(RenderTarget& target, RenderStates states) const
 {
     target.draw(*box, states);
     target.draw(*text, states);
-    //to do в зависимости от checked либо рисуем галочку, либо нет
+    if (checked)
+    {
+        target.draw(*symbol, states);
+    }
 }
 
 bool CheckBox::containsBound(int positionMouseX, int positionMouseY)
@@ -35,12 +42,10 @@ bool CheckBox::containsBound(int positionMouseX, int positionMouseY)
     return (positionMouseX > positionX && positionMouseX<positionX + width && positionMouseY>positionY && positionMouseY < positionY + height);
 }
 
-void CheckBox::setChecked(bool checked)
+void CheckBox::changeChecked()
 {
-    this->checked = checked;
+    checked = !checked;
 }
 
-void CheckBox::setText(string textChecked)
-{
-    this->textChecked = textChecked;
-}
+
+

@@ -7,12 +7,17 @@ void WorkWindow::startMainMusic(string path)
   
     if (!mainMusic->openFromFile(path))
         throw EXIT_FAILURE;
-    mainMusic->play();
+    //mainMusic->play();
+}
+
+void WorkWindow::saveSettings()
+{
+    //to do сохранить в файл checkbox и progressbar
 }
 
 void WorkWindow::startApplication()
 {
-    startMainMusic("source/audio/music.ogg");
+    //startMainMusic("source/audio/music.ogg");
     createMain();
     
 }
@@ -204,7 +209,7 @@ void WorkWindow::createSettings()
     buttons.push_back(&exitButton);
     settingsWindow->setButtons(&buttons);
     settingsWindow->progressbar = new ProgressBar(" ", 300, 30, 10, 50, "Music Volume");
-    settingsWindow->checkbox = new CheckBox(300, 200, "Distance");
+    settingsWindow->checkbox = new CheckBox(300, 200, "Distance", "V");
     settingsWindow->start();
     
 }
@@ -221,6 +226,7 @@ void WorkWindow::startSettings()
             Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
             if (event.type == Event::Closed)
             {
+                saveSettings();
                 window->close();
                 createMain();
             }
@@ -244,22 +250,25 @@ void WorkWindow::startSettings()
             }
             if (Mouse::isButtonPressed(Mouse::Left))
             {
+                if (progressbar->containBounds(mousePos.x, mousePos.y))
+                {
+                    progressbar->move(mousePos.x);
+                   // mainMusic->setVolume()
+                }
+            }
+            if(event.type == Event::MouseButtonReleased)
+            {
                 if (buttons->at(0)->getGlobalBounds().contains(mousePosF))
                 {
+                    saveSettings();
                     window->close();
                     createMain();
-                    /*for (int i = 0; i < audios->size(); i++)
-                    {
-                        audios->at(i)->stop();
-                    }*/
                    
                 }
                 if (checkbox->containsBound(mousePos.x, mousePos.y))
                 {
-                    checkbox->setText("V");
-                   /* checkbox = new CheckBox(500, 200, "V");
-                    checkbox->setChecked(true);*/
-                    
+                    checkbox->changeChecked();
+                 
                     //to do изменить параметр checkbox cheked
                 }
                 
