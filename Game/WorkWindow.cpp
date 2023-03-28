@@ -7,7 +7,7 @@ void WorkWindow::startMainMusic(string path)
   
     if (!mainMusic->openFromFile(path))
         throw EXIT_FAILURE;
-    //mainMusic->play();
+    mainMusic->play();
 }
 
 void WorkWindow::startApplication()
@@ -44,7 +44,7 @@ void WorkWindow::playMusic(string path)
     audios->push_back(newMusic);
     if (!newMusic->openFromFile(path))
         throw EXIT_FAILURE;
-   // newMusic->play();
+    newMusic->play();
 
 }
 
@@ -198,16 +198,17 @@ void WorkWindow::createSettings()
 {
     WorkWindow *settingsWindow = new WorkWindow(widthWindow, heightWindow, "Settings", "source/img/settings.jpg"); 
     RenderWindow* settings = settingsWindow->getWindow();
-    IntRect startPosition1(0, 0, 92, 92);
+    IntRect startPosition1(0, 0, 85, 85);
     vector<CustomButton*> buttons; //*?
-    CustomButton exitButton(*window, "source/img/exitSet.png", "source/img/exitSet.png", startPosition1, -(width - 92), -(height - 92));
+    CustomButton exitButton(*(settingsWindow->window), "source/img/exitSettings.png", "source/img/exitSettings.png", startPosition1, -(width - 85), -(height - 85));
     buttons.push_back(&exitButton);
     settingsWindow->setButtons(&buttons);
-    settingsWindow->progressbar = new ProgressBar(" ", 300, 50, 10, 70, "Music Volume");
+    settingsWindow->progressbar = new ProgressBar(" ", 300, 30, 10, 50, "Music Volume");
     settingsWindow->checkbox = new CheckBox(300, 200, "Distance");
     settingsWindow->start();
     
 }
+
 
 void WorkWindow::startSettings()
 {
@@ -223,8 +224,48 @@ void WorkWindow::startSettings()
                 window->close();
                 createMain();
             }
+            if (event.type == Event::MouseMoved)
+            {
+                for (int i = 0; i < buttons->size(); i++)
+                {
+                    if (buttons->at(i) != NULL)
+                    {
+                        if ((*(buttons->at(i))).getGlobalBounds().contains(mousePosF)) // arrayCustomButton[i]->getGlobalBounds()
+                        {
+                            buttons->at(i)->changeTextureButton(true);
+                        }
+                        else
+                        {
+                            buttons->at(i)->changeTextureButton(false);
+                        }
+                    }
 
+                }
+            }
+            if (Mouse::isButtonPressed(Mouse::Left))
+            {
+                if (buttons->at(0)->getGlobalBounds().contains(mousePosF))
+                {
+                    window->close();
+                    createMain();
+                    /*for (int i = 0; i < audios->size(); i++)
+                    {
+                        audios->at(i)->stop();
+                    }*/
+                   
+                }
+                if (checkbox->containsBound(mousePos.x, mousePos.y))
+                {
+                    checkbox->setText("V");
+                   /* checkbox = new CheckBox(500, 200, "V");
+                    checkbox->setChecked(true);*/
+                    
+                    //to do изменить параметр checkbox cheked
+                }
+                
+            }
         }
+
 
         window->clear();
         window->draw(*background); //отрисовка 
