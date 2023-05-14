@@ -7,6 +7,8 @@
 #include <Windows.h>
 #include "ProgressBar.h"
 #include "CheckBox.h"
+#include "User.h"
+#include "Database.h"
 using namespace sf;
 using namespace std;
 class WorkWindow
@@ -21,24 +23,23 @@ class WorkWindow
     string name;
     int width;
     int height;
+    User* user;
+    WorkWindow(int width, int height, string name, string pathBackground, User* user=nullptr);
     static void createMain();
     void startMain();
     void createSettings();
     void startSettings();
-    WorkWindow(int width, int height, string name, string pathBackground);
     void playMusic(string path);
     RenderWindow* getWindow();
     void setButtons(vector<CustomButton*>* buttons);
     void addButton(CustomButton* button);
     void start();
-    ~WorkWindow();
+    void saveSettings();
     static const int widthWindow = 800;
     static const int heightWindow = 500;
     static Music* mainMusic;
     static void startMainMusic(string path);
-    void saveSettings();
-    //SoundBuffer soundBuffer;
-    //Sound sound;
+    ~WorkWindow();
 public:
     static void startApplication();
     

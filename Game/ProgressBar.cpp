@@ -1,17 +1,18 @@
 #include "ProgressBar.h"
 
-ProgressBar::ProgressBar(string path, int width, int height, int widthSlider, int heightSlider, string label)
+ProgressBar::ProgressBar(string path, int width, int height, int widthSlider, int heightSlider, string label, float defaultValue)
 {
     //path
     this->width = width;
     this->height = height;
     this->widthSlider = widthSlider;
     this->heightSlider = heightSlider;
+    x = defaultValue;
     background = new RectangleShape(Vector2f(width, height));
     background->setPosition(Vector2f(positionX, positionY));
     background->setFillColor(Color(173, 34, 233));
     slider = new RectangleShape(Vector2f(widthSlider, heightSlider));
-    slider->setPosition(Vector2f(positionX + width, positionY - heightSlider / 5));
+    slider->setPosition(Vector2f(positionX + width * x / 100, positionY - heightSlider / 5));
     slider->setFillColor(Color(0, 0, 0));
     font = new Font();
     //Font font; - вылетает критическая ошибка
@@ -22,6 +23,7 @@ ProgressBar::ProgressBar(string path, int width, int height, int widthSlider, in
     text = new Text(label, *font);
     text->setPosition(Vector2f(positionTextX, positionTextY));
     text->setFillColor(Color(0, 0, 0));
+    //проработать default значение
 }
 
 bool ProgressBar::containBounds(int positionMouseX, int positionMouseY)
@@ -36,7 +38,8 @@ void ProgressBar::move(int x)
     if (x >= positionX && x <= positionX + width)
     {
         slider->setPosition(Vector2f(x, positionY - heightSlider / 5));
-
+        int dx = x - positionX;
+        this->x= dx * 100 / width;
     }
     
 }
@@ -52,6 +55,11 @@ void ProgressBar::draw(RenderTarget& target, RenderStates states) const
     target.draw(*background, states);
     target.draw(*slider, states);
     target.draw(*text, states);
+}
+
+float ProgressBar::getVolume()
+{
+    return x;
 }
 
 //void ProgressBar::draw(RenderTarget& target, RenderStates states)

@@ -19,14 +19,15 @@ class ProgressBar: public Drawable
     int positionY = 120;
     int positionTextX = 110;
     int positionTextY = 120;
-    int x = 100;
+    float x = 100;
 public:
-    ProgressBar(string path, int width, int height, int widthSlider, int heightSlider, string label);
+    ProgressBar(string path, int width, int height, int widthSlider, int heightSlider, string label, float defaultValue=100);
     bool containBounds(int positionMouseX, int positionMouseY);
     void move(int x);
     void changeActive();
     //virtual void draw(RenderTarget& target, RenderStates states); //to do разобрать override
     void draw(RenderTarget& target, RenderStates states) const override;  //ќтсутствие const означает, что объ€влен новый метод вместо переопределени€ существующего виртуального метода
     //const €вл€етс€ частью функции
+    float getVolume();
 };
 

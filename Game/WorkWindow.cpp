@@ -23,8 +23,10 @@ void WorkWindow::startApplication()
 }
 
 
-WorkWindow::WorkWindow(int width, int height, string name, string pathBackground)
+WorkWindow::WorkWindow(int width, int height, string name, string pathBackground, User* user)
+
 {
+    this->user = user;
     HWND hWnd = GetConsoleWindow();
     ShowWindow(hWnd, SW_HIDE);
     this->name = name;
@@ -201,15 +203,24 @@ void WorkWindow::startMain()
 
 void WorkWindow::createSettings()
 {
-    WorkWindow *settingsWindow = new WorkWindow(widthWindow, heightWindow, "Settings", "source/img/settings.jpg"); 
+    Database* db = Database::getInstance();
+    User* user = db->selectInf(1);
+    WorkWindow *settingsWindow = new WorkWindow(widthWindow, heightWindow, "Settings", "source/img/settings.jpg", user); 
     RenderWindow* settings = settingsWindow->getWindow();
     IntRect startPosition1(0, 0, 85, 85);
     vector<CustomButton*> buttons; //*?
     CustomButton exitButton(*(settingsWindow->window), "source/img/exitSettings.png", "source/img/exitSettings.png", startPosition1, -(width - 85), -(height - 85));
     buttons.push_back(&exitButton);
     settingsWindow->setButtons(&buttons);
-    settingsWindow->progressbar = new ProgressBar(" ", 300, 30, 10, 50, "Music Volume");
-    settingsWindow->checkbox = new CheckBox(300, 200, "Distance", "V");
+    float volume=100;
+    bool checkBoxValue = false;
+    if (user != nullptr)
+    {
+        volume = user->getVolume();
+        checkBoxValue = user->getDistance();
+    }
+    settingsWindow->progressbar = new ProgressBar(" ", 300, 30, 10, 50, "Music Volume", volume);
+    settingsWindow->checkbox = new CheckBox(300, 200, "Distance", "V", checkBoxValue);
     settingsWindow->start();
     
 }
@@ -217,6 +228,7 @@ void WorkWindow::createSettings()
 
 void WorkWindow::startSettings()
 {
+    Database* db = Database::getInstance();
     while (window->isOpen())
     {
         Event event;
@@ -253,7 +265,8 @@ void WorkWindow::startSettings()
                 if (progressbar->containBounds(mousePos.x, mousePos.y))
                 {
                     progressbar->move(mousePos.x);
-                   // mainMusic->setVolume()
+                    mainMusic->setVolume(progressbar->getVolume());
+                    db->updateVolume(user->getIdUser(), progressbar->getVolume());
                 }
             }
             if(event.type == Event::MouseButtonReleased)
@@ -268,8 +281,7 @@ void WorkWindow::startSettings()
                 if (checkbox->containsBound(mousePos.x, mousePos.y))
                 {
                     checkbox->changeChecked();
-                 
-                    //to do изменить параметр checkbox cheked
+                    db->updateDistance(user->getIdUser(), checkbox->isChecked());
                 }
                 
             }
