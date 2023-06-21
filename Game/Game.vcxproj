@@ -137,20 +137,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CheckBox.cpp" />
+    <ClCompile Include="Coin.cpp" />
     <ClCompile Include="CustomButton.cpp" />
     <ClCompile Include="CustomException.cpp" />
     <ClCompile Include="Database.cpp" />
+    <ClCompile Include="Fuel.cpp" />
+    <ClCompile Include="FuelProgressbar.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pedal.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="ProgressBar.cpp" />
+    <ClCompile Include="Speedometer.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="WorkWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CheckBox.h" />
+    <ClInclude Include="Coin.h" />
     <ClInclude Include="CustomButton.h" />
     <ClInclude Include="CustomException.h" />
     <ClInclude Include="Database.h" />
+    <ClInclude Include="Fuel.h" />
+    <ClInclude Include="FuelProgressbar.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Pedal.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="ProgressBar.h" />
+    <ClInclude Include="Speedometer.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="WorkWindow.h" />
   </ItemGroup>

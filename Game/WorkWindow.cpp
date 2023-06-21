@@ -4,10 +4,9 @@ Music* WorkWindow::mainMusic = new Music();
 
 void WorkWindow::startMainMusic(string path)
 {
-  
     if (!mainMusic->openFromFile(path))
         throw EXIT_FAILURE;
-    //mainMusic->play();
+    mainMusic->play();
 }
 
 void WorkWindow::saveSettings()
@@ -17,7 +16,7 @@ void WorkWindow::saveSettings()
 
 void WorkWindow::startApplication()
 {
-    //startMainMusic("source/audio/music.ogg");
+    startMainMusic("source/audio/music.ogg");
     createMain();
     
 }
@@ -37,7 +36,6 @@ WorkWindow::WorkWindow(int width, int height, string name, string pathBackground
     if (!texture->loadFromFile(pathBackground))
         throw CustomException("File is not loaded!");
     background = new Sprite(*texture);
-    //todo выполнить обработку спрайта и создать метод для кнопок и запуска окна, метод для музыки
 }
 
 void WorkWindow::playMusic(string path)
@@ -166,9 +164,15 @@ void WorkWindow::startMain()
             {
                 if (buttons->at(0)->getGlobalBounds().contains(mousePosF))
                 {
+                    Database* db = Database::getInstance();
+                    user = db->selectInf(1);
                     window->close();
-                    //createWindow(textureGame);
-                    //to do игровое окно
+                    for (int i = 0; i < audios->size(); i++)
+                    {
+                        audios->at(i)->stop();
+                    } 
+                    mainMusic->pause();                                               // добавлено
+                    Game::start(user->getVolume(), user->getDistance());
                 }
                 if (buttons->at(1)->getGlobalBounds().contains(mousePosF))
                 {
@@ -271,12 +275,11 @@ void WorkWindow::startSettings()
             }
             if(event.type == Event::MouseButtonReleased)
             {
-                if (buttons->at(0)->getGlobalBounds().contains(mousePosF))
+                if (buttons->at(0)->getGlobalBounds().contains(mousePosF))  
                 {
                     saveSettings();
                     window->close();
                     createMain();
-                   
                 }
                 if (checkbox->containsBound(mousePos.x, mousePos.y))
                 {

@@ -9,6 +9,7 @@
 #include "CheckBox.h"
 #include "User.h"
 #include "Database.h"
+#include "Game.h"
 using namespace sf;
 using namespace std;
 class WorkWindow
